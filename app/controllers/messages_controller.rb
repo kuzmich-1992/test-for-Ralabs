@@ -1,12 +1,16 @@
 class MessagesController < ActionController::API
+  include Response
+  include ExceptionHandler
   
   def index
   	@messages = Message.all
+    json_response(@messages)
   end
   
   def create
     @message = Message.create!(message_params)
     render json: message_url(@message)
+    json_response(@message, :created)
   end
 
   def show
@@ -18,6 +22,7 @@ class MessagesController < ActionController::API
   	else
   	  render plain: "message alrady readed"
   	end
+    json_response(@message)
   end
 
   def message_params
