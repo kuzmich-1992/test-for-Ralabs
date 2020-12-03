@@ -10,13 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_02_233850) do
+ActiveRecord::Schema.define(version: 2020_12_03_153457) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "messages", force: :cascade do |t|
-    t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "readed", default: false

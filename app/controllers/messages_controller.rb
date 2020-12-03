@@ -21,6 +21,6 @@ class MessagesController < ActionController::API
   end
 
   def message_params
-    params.permit(:description, :readed)
+    params.permit(:readed)
   end
 end
