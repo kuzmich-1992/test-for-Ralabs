@@ -12,6 +12,7 @@
     <input id="password_text" type="text" name="text" />
     
     <input type="hidden" id="password" name="password" value="">
+    <input type="hidden" id="transit_message" name="transit_message" value="">
     <button>Send</button>
   </div>
   </form>
@@ -47,12 +48,12 @@
   });
 
   var transitmessage = salt.toString()+ iv.toString() + encrypted.toString();
-  return transitmessage;
- 
+  document.getElementById("transit_message").value = transitmessage;
+  
   };
 
   var encrypted = encrypt(message, password);
-  document.getElementById("password").value = encrypted.toString(CryptoJS.enc.Utf8);
+  document.getElementById("password").value = encrypted;
 
   </script>
 

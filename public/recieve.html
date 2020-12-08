@@ -39,7 +39,7 @@ $(document).ready(function(){
   dataType: 'json',
   }).done(function(data) {
    console.log(data);
-   $("#pass").append(JSON.stringify(data.password));
+   $("#pass").append(JSON.stringify(data.transit_message));
   });
 
 
@@ -47,7 +47,7 @@ $(document).ready(function(){
 
   $("#mybutton2").click(function(){
 
-  var encrypted = $("#pass").text() ;
+  var transitmessage = $("#pass").text() ;
   var key = document.getElementById("myInput2").value;
   function decrypt (transitmessage, pass) {
   var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
@@ -64,8 +64,11 @@ $(document).ready(function(){
     padding: CryptoJS.pad.Pkcs7,
     mode: CryptoJS.mode.CBC
   })
-  return decrypted;
   
+  return decrypted;
+  var password = document.getElementById("myInput2").value;
+  var decrypted = decrypt(transitmessage, password);
+  console.log(decrypted);
   };
 
   });
