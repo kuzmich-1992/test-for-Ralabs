@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
+
+<div id="pass"></div>
+
+<script>
+
+var id = 226;
+  
+
+  $.ajax({
+  url: "http://localhost:3000/messages/" + id,
+  type: "GET",
+  dataType: 'json',
+  }).done(function(data) {
+   console.log(data);
+   $("#pass").append(JSON.stringify(data.password));
+  
+
+  });
+
+  
+
+
+function decrypt (transitmessage, pass) {
+  var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
+  var iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
+  var encrypted = transitmessage.substring(64);
+  
+  var key = CryptoJS.PBKDF2(pass, salt, {
+      keySize: keySize/32,
+      iterations: iterations
+    });
+
+  var decrypted = CryptoJS.AES.decrypt({ciphertext:encrypted}, key, { 
+    iv: CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32)), 
+    padding: CryptoJS.pad.Pkcs7,
+    mode: CryptoJS.mode.CBC
+    
+  })
+  return decrypted;
+}
+
+</script>
+
