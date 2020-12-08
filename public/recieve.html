@@ -5,11 +5,26 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
+<p> enter id of message</p>
+
+<input id="myInput" type="text" size="20">
+
+<button>submit</button>
+
+<p></p>
+
+<p>encrypted message</p>
+
 <div id="pass"></div>
 
 <script>
 
-var id = 227;
+$(document).ready(function(){
+
+  $("button").click(function(){
+    
+
+  var id = document.getElementById("myInput").value;
   
 
   $.ajax({
@@ -19,31 +34,14 @@ var id = 227;
   }).done(function(data) {
    console.log(data);
    $("#pass").append(JSON.stringify(data.password));
-  
+  });
+
 
   });
 
-  
 
+});
 
-function decrypt (transitmessage, pass) {
-  var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
-  var iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
-  var encrypted = transitmessage.substring(64);
-  
-  var key = CryptoJS.PBKDF2(pass, salt, {
-      keySize: keySize/32,
-      iterations: iterations
-    });
-
-  var decrypted = CryptoJS.AES.decrypt({ciphertext:encrypted}, key, { 
-    iv: CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32)), 
-    padding: CryptoJS.pad.Pkcs7,
-    mode: CryptoJS.mode.CBC
-    
-  })
-  return decrypted;
-}
 
 </script>
 
