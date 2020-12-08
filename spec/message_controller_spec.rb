@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 RSpec.describe 'Messages API', type: :request do
@@ -5,14 +7,13 @@ RSpec.describe 'Messages API', type: :request do
   let(:message_id) { messages.first.id }
 
   describe 'GET /messages' do
-    
     before { get '/messages' }
 
     it 'returns messages' do
       expect(response).to have_http_status(:success)
-      expect {
+      expect do
         JSON.parse(response.body)
-      }.to_not raise_error
+      end.to_not raise_error
     end
 
     it 'returns status code 200' do
@@ -20,16 +21,15 @@ RSpec.describe 'Messages API', type: :request do
     end
   end
 
-
   describe 'GET /messages/:id' do
     before { get "/messages/#{message_id}" }
 
     context 'when the record exists' do
       it 'returns the message' do
         expect(response).to have_http_status(:success)
-      expect {
-        JSON.parse(response.body)
-      }.to_not raise_error
+        expect do
+          JSON.parse(response.body)
+        end.to_not raise_error
       end
 
       it 'returns status code 200' do
@@ -39,9 +39,8 @@ RSpec.describe 'Messages API', type: :request do
   end
 
   describe 'POST /messages' do
-
     context 'when the request is valid' do
-      before { post '/messages'}
+      before { post '/messages' }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)

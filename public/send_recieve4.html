@@ -1,141 +1,111 @@
 <html>
-<head> 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-</head>
-
+  <head> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  </head>
   
   <div>
-    <p>send</p>
+    <h4>send</h4>
     <p>Enter text</p>
     <input id="text" type="text" name="text" />
     <p>Enter pasword</p>
     <input id="passcode" type="text" name="text" />
     <button id="encbutton" >Encrypt</button>
-
     <p>encrypted message for send</p>
-
     <div id="encrypted"></div>
-
+    <p></p>
     <button id="sendbutton" >SEND</button>
-
   </div>
   
-
-<br>
-<p>recieve</p>
-<br>
+  <br>
+  <h4>recieve</h4>
+  <br>
 
 <head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 </head>
 
-<p> enter id of message</p>
-
-<input id="myInput" type="text" size="20">
-
-<button id="mybutton">submit</button>
-
-<p></p>
-
-<p>encrypted message</p>
-
-<div id="pass"></div>
-
-<p>enter password</p>
-
-<input id="myInput2" type="text" size="20">
-
-<button id="mybutton2">show message</button>
-
-<input type="hidden" id="enc" name="password" value="">
+  <p> enter id of message</p>
+  <input id="myInput" type="text" size="20">
+  <button id="mybutton">submit</button>
+  <p></p>
+  <p>encrypted message</p>
+  <div id="pass"></div>
+  <p>enter password</p>
+  <input id="myInput2" type="text" size="20">
+  <button id="mybutton2">show message</button>
+  <input type="hidden" id="enc" name="password" value="">
+  <p>decrypted message</p>
+  <div id="decrypted"></div>
 
 <script>
 
 $(document).ready(function(){
-
-    $("#encbutton").click(function(){
-        
-        let code = (function(){
-            return{
-              encryptMessage: function(messageToencrypt = '', secretkey = ''){
-                var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
-                return encryptedMessage.toString();
-              },
-            }
-        })();
+  $("#encbutton").click(function(){
+      let code = (function(){
+        return{
+          encryptMessage: function(messageToencrypt = '', secretkey = ''){
+            var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
+              return encryptedMessage.toString();
+          },
+        }
+      })();
 
         var message = $("#text").val(); 
-
         var key = $("#passcode").val();
-    
         var encrypted = code.encryptMessage(message,key);
-  
         $("#encrypted").append(encrypted);
+        var data = encrypted ;
 
-
-    var data = encrypted ;
-
-    $("#sendbutton").click(function(){
-      debugger;
-      $.ajax({
-        url: 'http://localhost:3000/messages#create',
-        type: "POST",
-        data: { text: data } ,
-        dataType: 'json',
-        }).done(function (data){
-           console.log(data.id);
-        });
+  $("#sendbutton").click(function(){
+    $.ajax({
+      url: 'http://localhost:3000/messages#create',
+      type: "POST",
+      data: { text: data } ,
+      dataType: 'json',
+      }).done(function (data){
+        console.log(data.id);
+      });
 
     });
 
-    });
+  });
 
 });
 
 
 $(document).ready(function(){
-
-    $("#mybutton").click(function(){
-    
-
-      var id = document.getElementById("myInput").value;
-  
-
-      $.ajax({
+  $("#mybutton").click(function(){
+    var id = document.getElementById("myInput").value;
+    $.ajax({
       url: "http://localhost:3000/messages/" + id,
       type: "GET",
       dataType: 'json',
       }).done(function(data) {
       console.log(data);
       $("#pass").append(JSON.stringify(data.text));
-      });
-
-
     });
+  });
 
   $("#mybutton2").click(function(){
-
     let code2 = (function(){
       return{
         decryptMessage: function(encryptedMessage = '', secretkey = ''){
           var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, secretkey);
           var decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
-
           return decryptedMessage;
         }
       }
     })();
 
     var message = $("#pass").text().replace(/^"(.+(?="$))"$/, '$1') ;
-    
     var key = $("#myInput2").val();
-
     console.log(typeof message);
     console.log(typeof key);
     var decrypted = code2.decryptMessage( message , key );
     decrypted.toString(CryptoJS.enc.Utf8)
     console.log(decrypted);
+    $("#decrypted").append(decrypted);
     }); 
 
 }); 

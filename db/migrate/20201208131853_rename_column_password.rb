@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class RenameColumnPassword < ActiveRecord::Migration[5.2]
   def change
-  	rename_column :messages, :password, :text
+    rename_column :messages, :password, :text
   end
 end
