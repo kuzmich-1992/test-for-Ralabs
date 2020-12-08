@@ -59,7 +59,7 @@ $(document).ready(function(){
 
   $("#sendbutton").click(function(){
     $.ajax({
-      url: 'http://localhost:3000/messages#create',
+      url: 'https://ralabs-test.herokuapp.com/messages#create',
       type: "POST",
       data: { text: data } ,
       dataType: 'json',
@@ -78,7 +78,7 @@ $(document).ready(function(){
   $("#mybutton").click(function(){
     var id = document.getElementById("myInput").value;
     $.ajax({
-      url: "http://localhost:3000/messages/" + id,
+      url: "https://ralabs-test.herokuapp.com/messages/" + id,
       type: "GET",
       dataType: 'json',
       }).done(function(data) {
