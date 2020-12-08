@@ -9,7 +9,7 @@
 
 <input id="myInput" type="text" size="20">
 
-<button>submit</button>
+<button id="mybutton">submit</button>
 
 <p></p>
 
@@ -17,11 +17,17 @@
 
 <div id="pass"></div>
 
+<p>enter password</p>
+
+<input id="myInput2" type="text" size="20">
+
+<button id="mybutton2">show message</button>
+
 <script>
 
 $(document).ready(function(){
 
-  $("button").click(function(){
+  $("#mybutton").click(function(){
     
 
   var id = document.getElementById("myInput").value;
@@ -39,6 +45,30 @@ $(document).ready(function(){
 
   });
 
+  $("#mybutton2").click(function(){
+
+  var encrypted = $("#pass").text() ;
+  var key = document.getElementById("myInput2").value;
+  function decrypt (transitmessage, pass) {
+  var salt = CryptoJS.enc.Hex.parse(transitmessage.substr(0, 32));
+  var iv = CryptoJS.enc.Hex.parse(transitmessage.substr(32, 32))
+  var encrypted = transitmessage.substring(64);
+  
+  var key = CryptoJS.PBKDF2(pass, salt, {
+      keySize: keySize/32,
+      iterations: iterations
+    });
+  
+  var decrypted = CryptoJS.AES.decrypt(encrypted, key, { 
+    iv: iv, 
+    padding: CryptoJS.pad.Pkcs7,
+    mode: CryptoJS.mode.CBC
+  })
+  return decrypted;
+  
+  };
+
+  });
 
 });
 
