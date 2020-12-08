@@ -1,3 +1,3 @@
 class MessageSerializer < ActiveModel::Serializer
-  attributes :id, :password, :transit_message
+  attributes :id, :text, :transit_message
 end

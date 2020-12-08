@@ -3,18 +3,23 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
 </head>
 
-  <form action="http://localhost:3000/messages#create" method="post">
+  
   <div>
     <p>send</p>
     <p>Enter text</p>
     <input id="text" type="text" name="text" />
     <p>Enter pasword</p>
-    <input id="password_text" type="text" name="text" />
-    
-    <input type="hidden" id="password" name="password" value="">
-    <button>Send</button>
+    <input id="passcode" type="text" name="text" />
+    <button id="encbutton" >Encrypt</button>
+
+    <p>encrypted message for send</p>
+
+    <div id="encrypted"></div>
+
+    <button id="sendbutton" >SEND</button>
+
   </div>
-  </form>
+  
 
 <br>
 <p>recieve</p>
@@ -43,38 +48,58 @@
 
 <button id="mybutton2">show message</button>
 
-<div id="decrypted"></div>
+<input type="hidden" id="enc" name="password" value="">
 
 <script>
 
-var message = document.querySelector("#text").value ;
+$(document).ready(function(){
 
-var key = document.querySelector("#password_text").value ;
+    $("#encbutton").click(function(){
+        
+        let code = (function(){
+            return{
+              encryptMessage: function(messageToencrypt = '', secretkey = ''){
+                var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
+                return encryptedMessage.toString();
+              },
+            }
+        })();
 
-let code = (function(){
-    return{
-      encryptMessage: function(messageToencrypt = '', secretkey = ''){
-        var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
-        return encryptedMessage.toString();
-      },
-    }
-})();
+        var message = $("#text").val(); 
+
+        var key = $("#passcode").val();
+    
+        var encrypted = code.encryptMessage(message,key);
+  
+        $("#encrypted").append(encrypted);
 
 
-var encrypted = code.encryptMessage(message,key);
+    var data = encrypted ;
 
-document.getElementById("password").value = encrypted;
+    $("#sendbutton").click(function(){
+      debugger;
+      $.ajax({
+        url: 'http://localhost:3000/messages#create',
+        type: "POST",
+        data: { text: data } ,
+        dataType: 'json',
+        }).done(function (data){
+           console.log(data.id);
+        });
 
-</script>
+    });
+
+    });
+
+});
 
 
-<script>
 $(document).ready(function(){
 
     $("#mybutton").click(function(){
     
 
-        var id = document.getElementById("myInput").value;
+      var id = document.getElementById("myInput").value;
   
 
       $.ajax({
@@ -83,7 +108,7 @@ $(document).ready(function(){
       dataType: 'json',
       }).done(function(data) {
       console.log(data);
-      $("#pass").append(JSON.stringify(data.password));
+      $("#pass").append(JSON.stringify(data.text));
       });
 
 
@@ -91,7 +116,7 @@ $(document).ready(function(){
 
   $("#mybutton2").click(function(){
 
-    let code = (function(){
+    let code2 = (function(){
       return{
         decryptMessage: function(encryptedMessage = '', secretkey = ''){
           var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, secretkey);
@@ -102,16 +127,16 @@ $(document).ready(function(){
       }
     })();
 
-
-
     var message = $("#pass").text().replace(/^"(.+(?="$))"$/, '$1') ;
     
-    var key = $("#myInput2").text();
-    
-    var decrypted = code.decryptMessage(message,key);
+    var key = $("#myInput2").val();
 
+    console.log(typeof message);
+    console.log(typeof key);
+    var decrypted = code2.decryptMessage( message , key );
+    decrypted.toString(CryptoJS.enc.Utf8)
     console.log(decrypted);
-  }); 
+    }); 
 
 }); 
 
