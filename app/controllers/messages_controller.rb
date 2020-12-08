@@ -15,14 +15,14 @@ class MessagesController < ActionController::API
 
   def show
   	@message = Message.find(params[:id])
-  	if @message.readed == false
+  	# if @message.readed == false
   	  @message = Message.find(params[:id])
   	  # render json: @message, fields: %i[id], adapter: :json
   	  @message.update_attribute(:readed, true)
       json_response(@message)
-  	else
-  	  render plain: "message alrady readed"
-  	end
+  	# else
+  	#   render plain: "message alrady readed"
+  	# end
   end
 
   def message_params

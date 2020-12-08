@@ -28,6 +28,7 @@ gem 'rspec-rails', '~> 3.5', '>= 3.5.2'
 gem 'active_model_serializers', '~> 0.10.0'
 gem 'pry'
 gem 'rubocop'
+gem 'rack-cors'
 
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
