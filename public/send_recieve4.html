@@ -1,0 +1,119 @@
+<html>
+<head> 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+</head>
+
+  <form action="http://localhost:3000/messages#create" method="post">
+  <div>
+    <p>send</p>
+    <p>Enter text</p>
+    <input id="text" type="text" name="text" />
+    <p>Enter pasword</p>
+    <input id="password_text" type="text" name="text" />
+    
+    <input type="hidden" id="password" name="password" value="">
+    <button>Send</button>
+  </div>
+  </form>
+
+<br>
+<p>recieve</p>
+<br>
+
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+</head>
+
+<p> enter id of message</p>
+
+<input id="myInput" type="text" size="20">
+
+<button id="mybutton">submit</button>
+
+<p></p>
+
+<p>encrypted message</p>
+
+<div id="pass"></div>
+
+<p>enter password</p>
+
+<input id="myInput2" type="text" size="20">
+
+<button id="mybutton2">show message</button>
+
+<div id="decrypted"></div>
+
+<script>
+
+var message = document.querySelector("#text").value ;
+
+var key = document.querySelector("#password_text").value ;
+
+let code = (function(){
+    return{
+      encryptMessage: function(messageToencrypt = '', secretkey = ''){
+        var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
+        return encryptedMessage.toString();
+      },
+    }
+})();
+
+
+var encrypted = code.encryptMessage(message,key);
+
+document.getElementById("password").value = encrypted;
+
+</script>
+
+
+<script>
+$(document).ready(function(){
+
+    $("#mybutton").click(function(){
+    
+
+        var id = document.getElementById("myInput").value;
+  
+
+      $.ajax({
+      url: "http://localhost:3000/messages/" + id,
+      type: "GET",
+      dataType: 'json',
+      }).done(function(data) {
+      console.log(data);
+      $("#pass").append(JSON.stringify(data.password));
+      });
+
+
+    });
+
+  $("#mybutton2").click(function(){
+
+    let code = (function(){
+      return{
+        decryptMessage: function(encryptedMessage = '', secretkey = ''){
+          var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, secretkey);
+          var decryptedMessage = decryptedBytes.toString(CryptoJS.enc.Utf8);
+
+          return decryptedMessage;
+        }
+      }
+    })();
+
+
+
+    var message = $("#pass").text().replace(/^"(.+(?="$))"$/, '$1') ;
+    
+    var key = $("#myInput2").text();
+    
+    var decrypted = code.decryptMessage(message,key);
+
+    console.log(decrypted);
+  }); 
+
+}); 
+
+
+</script>
