@@ -99,7 +99,7 @@ $(document).ready(function(){
     })();
 
     var message = $("#pass").text().replace(/^"(.+(?="$))"$/, '$1') ;
-    var key = $("#passInput2").val();
+    var key = $("#passInput").val();
     console.log(typeof message);
     console.log(typeof key);
     var decrypted = code.decryptMessage( message , key );
