@@ -12,7 +12,7 @@
     <button id="encbutton" >Encrypt</button>
     <p>encrypted message for send</p>
     <div id="encrypted"></div>
-    <p></p>
+    <br>
     <button id="sendbutton" >SEND</button>
   </div>
   
@@ -26,14 +26,14 @@
 </head>
 
   <p> enter id of message</p>
-  <input id="myInput" type="text" size="20">
-  <button id="mybutton">submit</button>
-  <p></p>
+  <input id="idInput" type="text" size="20">
+  <button id="idbutton">submit</button>
+  <br>
   <p>encrypted message</p>
   <div id="pass"></div>
   <p>enter password</p>
-  <input id="myInput2" type="text" size="20">
-  <button id="mybutton2">show message</button>
+  <input id="passInput" type="text" size="20">
+  <button id="passbutton">show message</button>
   <input type="hidden" id="enc" name="password" value="">
   <p>decrypted message</p>
   <div id="decrypted"></div>
@@ -42,7 +42,7 @@
 
 $(document).ready(function(){
   $("#encbutton").click(function(){
-      let code = (function(){
+      var code = (function(){
         return{
           encryptMessage: function(messageToencrypt = '', secretkey = ''){
             var encryptedMessage = CryptoJS.AES.encrypt(messageToencrypt, secretkey);
@@ -64,7 +64,7 @@ $(document).ready(function(){
       data: { text: data } ,
       dataType: 'json',
       }).done(function (data){
-        console.log(data.id);
+        
       });
 
     });
@@ -75,20 +75,20 @@ $(document).ready(function(){
 
 
 $(document).ready(function(){
-  $("#mybutton").click(function(){
-    var id = document.getElementById("myInput").value;
+  $("#idbutton").click(function(){
+    var id = document.getElementById("idInput").value;
     $.ajax({
       url: "https://ralabs-test.herokuapp.com/messages/" + id,
       type: "GET",
       dataType: 'json',
       }).done(function(data) {
-      console.log(data);
+      
       $("#pass").append(JSON.stringify(data.text));
     });
   });
 
-  $("#mybutton2").click(function(){
-    let code2 = (function(){
+  $("#passbutton").click(function(){
+    var code = (function(){
       return{
         decryptMessage: function(encryptedMessage = '', secretkey = ''){
           var decryptedBytes = CryptoJS.AES.decrypt(encryptedMessage, secretkey);
@@ -99,12 +99,12 @@ $(document).ready(function(){
     })();
 
     var message = $("#pass").text().replace(/^"(.+(?="$))"$/, '$1') ;
-    var key = $("#myInput2").val();
+    var key = $("#passInput2").val();
     console.log(typeof message);
     console.log(typeof key);
-    var decrypted = code2.decryptMessage( message , key );
+    var decrypted = code.decryptMessage( message , key );
     decrypted.toString(CryptoJS.enc.Utf8)
-    console.log(decrypted);
+    
     $("#decrypted").append(decrypted);
     }); 
 
